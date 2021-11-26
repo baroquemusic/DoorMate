@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoorMate">
         <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
             android:name=".ContactsActivity"
             android:exported="false" />
         <activity

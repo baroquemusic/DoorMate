@@ -1,6 +1,8 @@
 package com.unicorn.doormate
 
+import android.annotation.SuppressLint
 import android.database.Cursor
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Data.CONTENT_URI
@@ -49,12 +51,25 @@ private val PROJECTION: Array<out String> = arrayOf(
     ContactsContract.Data.LOOKUP_KEY
 )*/
 
-const val SELECTION: String = "${ContactsContract.Data.LOOKUP_KEY} = ?"
+/*const val SELECTION: String = "${ContactsContract.Data.LOOKUP_KEY} = ?"
 private val selectionArgs: Array<String> = arrayOf("")
 private var lookupKey: String? = null
 
-private const val SORT_ORDER = ContactsContract.Data.MIMETYPE
+private const val SORT_ORDER = ContactsContract.Data.MIMETYPE*/
 
+
+@SuppressLint("InlinedApi", "ObsoleteSdkInt")
+val SELECTION: String =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
+    else
+        "${ContactsContract.Contacts.DISPLAY_NAME} LIKE ?"
+
+private var searchString: String = ""
+private val selectionArgs = arrayOf<String>(searchString)
+
+private var lookupKey: String? = null
+private const val SORT_ORDER = ContactsContract.Data.MIMETYPE
 
 /*
 private val SELECTION: String =
