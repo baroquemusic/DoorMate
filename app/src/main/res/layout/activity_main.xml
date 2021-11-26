@@ -2,96 +2,30 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
     tools:context=".MainActivity">
 
+
     <Button
-        android:id="@+id/buttonRefresh"
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="refresh"
-        app:layout_constraintBottom_toTopOf="@+id/houseNumber"
+        android:text="register"
+        app:layout_constraintBottom_toTopOf="@+id/contacts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/houseNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="House Number"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/streetName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonRefresh" />
-
-    <EditText
-        android:id="@+id/streetName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Street"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/cityName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/houseNumber" />
-
-    <EditText
-        android:id="@+id/cityName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="City"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/postalCode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/streetName" />
-
-    <EditText
-        android:id="@+id/postalCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Postal Code (ZIP)"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/countryName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityName" />
-
-    <EditText
-        android:id="@+id/countryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Country"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/buttonContinue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postalCode" />
-
     <Button
-        android:id="@+id/buttonContinue"
+        android:id="@+id/contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="continue"
+        android:text="contacts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countryName" />
+        app:layout_constraintTop_toBottomOf="@+id/register" />
 </androidx.constraintlayout.widget.ConstraintLayout>

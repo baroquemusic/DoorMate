@@ -5,7 +5,14 @@
       <map>
         <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/activity_contact.xml" value="0.2857142857142857" />
         <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/activity_contact_badge.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/activity_contacts.xml" value="0.2857142857142857" />
         <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/activity_main.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/activity_register.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/contacts_list_item.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/contacts_list_view.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/fragment_contacts.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/fragment_details.xml" value="0.2857142857142857" />
+        <entry key="..\:/Users/Gabor/OneDrive/Documents/Git/doormate/app/src/main/res/layout/ontacts_list_item.xml" value="0.2857142857142857" />
       </map>
     </option>
   </component>
