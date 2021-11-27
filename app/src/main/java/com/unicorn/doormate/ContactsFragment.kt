@@ -6,11 +6,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.CursorAdapter
+import android.widget.ListView
+import android.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
@@ -36,8 +38,6 @@ class ContactsFragment :
             "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
         else
             "${ContactsContract.Contacts.DISPLAY_NAME} LIKE ?"
-    private val searchString: String = ""
-    private val selectionArgs = arrayOf(searchString)
 
     private val TO_IDS: IntArray = intArrayOf(android.R.id.text1)
 
@@ -76,7 +76,6 @@ class ContactsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.i("asdf", this.toString())
         activity?.also {
             contactsList = it.findViewById(R.id.contact_list_view)
             contactsList.onItemClickListener = this
@@ -101,6 +100,8 @@ class ContactsFragment :
     }
 
     override fun onCreateLoader(loaderId: Int, args: Bundle?): Loader<Cursor> {
+        val searchString = ""
+        val selectionArgs = arrayOf(searchString)
         selectionArgs[0] = "%$searchString%"
         return activity?.let {
             return CursorLoader(
@@ -109,7 +110,7 @@ class ContactsFragment :
                 PROJECTION,
                 SELECTION,
                 selectionArgs,
-                null
+                "${ContactsContract.Contacts.DISPLAY_NAME} COLLATE LOCALIZED ASC"
             )
         } ?: throw IllegalStateException()
     }
@@ -120,12 +121,5 @@ class ContactsFragment :
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
         cursorAdapter?.swapCursor(null)
-    }
-
-    companion object {
-        fun newInstance() =
-            ContactsFragment().apply {
-                return@apply
-            }
     }
 }
