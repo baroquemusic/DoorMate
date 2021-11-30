@@ -1,125 +1,142 @@
 package com.unicorn.doormate
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.view.LayoutInflater
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.CursorAdapter
 import android.widget.ListView
+import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.ListFragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 
+private val PROJECTION: Array<String> = arrayOf(
+    ContactsContract.Contacts._ID,
+    ContactsContract.Contacts.DISPLAY_NAME,
+    ContactsContract.Contacts.CONTACT_STATUS,
+    ContactsContract.Contacts.CONTACT_PRESENCE,
+    ContactsContract.Contacts.PHOTO_ID,
+    ContactsContract.Contacts.LOOKUP_KEY
+)
+
+
+/*
+
+
+private val PHONE_NUMBER_PROJECTION: Array<String> = arrayOf(
+    ContactsContract.CommonDataKinds.Identity._ID,
+    ContactsContract.CommonDataKinds.Identity.LOOKUP_KEY,
+    ContactsContract.CommonDataKinds.Phone.NUMBER
+)
+
+private const val PHONE_NUMBER_SELECTION: String = "${ContactsContract.CommonDataKinds.Identity.LOOKUP_KEY} = ?"
+
+private val selectionArgs: Array<String> = arrayOf("")
+
+
+*/
+
+
+
 class ContactsFragment :
-    Fragment(R.layout.fragment_contacts),
-    LoaderManager.LoaderCallbacks<Cursor>,
-    AdapterView.OnItemClickListener {
+    ListFragment(),
+    SearchView.OnQueryTextListener,
+    LoaderManager.LoaderCallbacks<Cursor> {
 
-    @SuppressLint("InlinedApi", "ObsoleteSdkInt")
-    private val FROM_COLUMNS: Array<String> = arrayOf(
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)) {
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        } else {
-            ContactsContract.Contacts.DISPLAY_NAME
-        }
-    )
+    private lateinit var mAdapter: SimpleCursorAdapter
 
-    @SuppressLint("InlinedApi", "ObsoleteSdkInt")
-    private val SELECTION: String =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
-        else
-            "${ContactsContract.Contacts.DISPLAY_NAME} LIKE ?"
-
-    private val TO_IDS: IntArray = intArrayOf(android.R.id.text1)
-
-    private lateinit var contactsList: ListView
-
-    private var contactId: Long = 0
-    private var contactKey: String? = null
-    private var contactUri: Uri? = null
-    private var cursorAdapter: SimpleCursorAdapter? = null
-
-    @SuppressLint("InlinedApi", "ObsoleteSdkInt")
-    private val PROJECTION: Array<out String> = arrayOf(
-        ContactsContract.Data._ID,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            ContactsContract.Data.DISPLAY_NAME_PRIMARY
-        else
-            ContactsContract.Data.DISPLAY_NAME,
-        ContactsContract.Data.LOOKUP_KEY
-    )
-
-    private val CONTACT_ID_INDEX: Int = 0
-    private val CONTACT_KEY_INDEX: Int = 1
+    private var curFilter: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         loaderManager.initLoader(0, null, this)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_contacts, container, false)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        activity?.also {
-            contactsList = it.findViewById(R.id.contact_list_view)
-            contactsList.onItemClickListener = this
-            cursorAdapter = SimpleCursorAdapter(
-                it,
-                R.layout.contacts_list_item,
-                null,
-                FROM_COLUMNS, TO_IDS,
-                0
-            )
-            contactsList.adapter = cursorAdapter
+        setEmptyText("No match")
+
+        setHasOptionsMenu(true)
+
+        mAdapter = SimpleCursorAdapter(
+            activity,
+            android.R.layout.simple_list_item_2,
+            null,
+            arrayOf(
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts.LOOKUP_KEY
+            ),
+            intArrayOf(android.R.id.text1, android.R.id.text2),
+            0
+        )
+        listAdapter = mAdapter
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.add("Search").apply {
+            setIcon(android.R.drawable.ic_menu_search)
+            setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            actionView = SearchView(activity).apply {
+                setOnQueryTextListener(this@ContactsFragment)
+            }
         }
     }
 
-    override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        (parent.adapter as? CursorAdapter)?.cursor?.apply {
-            moveToPosition(position)
-            contactId = getLong(CONTACT_ID_INDEX)
-            contactKey = getString(CONTACT_KEY_INDEX)
-            contactUri = ContactsContract.Contacts.getLookupUri(contactId, contactKey)
-        }
+    override fun onQueryTextChange(newText: String?): Boolean {
+
+        curFilter = if (newText?.isNotEmpty() == true) newText else null
+        loaderManager.restartLoader(0, null, this)
+        return true
     }
 
-    override fun onCreateLoader(loaderId: Int, args: Bundle?): Loader<Cursor> {
-        val searchString = ""
-        val selectionArgs = arrayOf(searchString)
-        selectionArgs[0] = "%$searchString%"
-        return activity?.let {
-            return CursorLoader(
-                it,
-                ContactsContract.Contacts.CONTENT_URI,
+    override fun onQueryTextSubmit(query: String): Boolean {
+
+        return true
+    }
+
+    override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
+
+                Log.i("FragmentComplexList", "Item clicked: $id")
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): CursorLoader {
+
+        val baseUri: Uri = if (curFilter != null && curFilter?.length != 0) {
+            Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI, Uri.encode(curFilter))
+        } else {
+            ContactsContract.Contacts.CONTENT_URI
+        }
+
+        val select: String = "((${ContactsContract.Contacts.DISPLAY_NAME} NOTNULL) AND (" +
+                "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=1) AND (" +
+                "${ContactsContract.Contacts.DISPLAY_NAME} != ''))"
+        return (activity as? Context)?.let { context ->
+            CursorLoader(
+                context,
+                baseUri,
                 PROJECTION,
-                SELECTION,
-                selectionArgs,
+                select,
+                null,
                 "${ContactsContract.Contacts.DISPLAY_NAME} COLLATE LOCALIZED ASC"
             )
-        } ?: throw IllegalStateException()
+        } ?: throw Exception("Activity cannot be null")
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
-        cursorAdapter?.swapCursor(cursor)
+    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
+        mAdapter.swapCursor(data)
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        cursorAdapter?.swapCursor(null)
+        mAdapter.swapCursor(null)
     }
 }
+
